@@ -38,15 +38,20 @@ app.post("/shorten", async (req, res) => {
             }
         );
 
+const data = await response.json();
 
-        const data = await response.json();
+console.log("Bitly response:", data);
 
-   console.log("Bitly response:", data);
+if (!response.ok) {
+    return res.status(response.status).json(data);
+}
 
-        res.json(data);
-
-
-    } catch(error) {
+res.json({
+    shortUrl: data.link
+});
+        
+    
+    catch(error) {
 
         res.status(500).json({
             error:"Bitly error"
