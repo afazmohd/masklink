@@ -25,18 +25,34 @@ app.post("/shorten", async (req, res) => {
             `https://goo.su/api/links/create?url=${encodeURIComponent(longUrl)}`
         );
 
-        const data = await response.json();
+        const text = await response.text();
 
-        console.log("Goo.su response:", data);
+        console.log("Goo.su response:", text);
 
-        if (!response.ok || data.error) {
+        let data;
+
+        try {
+            data = JSON.parse(text);
+        } catch {
+
             return res.status(400).json({
-                error: data.error || "Goo.su error"
+                error: "Goo.su returned invalid response"
             });
+
         }
 
+
+        if (!response.ok) {
+
+            return res.status(response.status).json({
+                error: data.error || "Goo.su error"
+            });
+
+        }
+
+
         res.json({
-            shortUrl: data.short
+            shortUrl: data.short || data.short_url || data.url
         });
 
 
