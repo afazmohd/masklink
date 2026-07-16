@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MaskLink</title>
+<link rel="icon" type="image/png" href="masklink-logo.png">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Poppins",sans-serif;
+}
+
+body{
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+background:linear-gradient(to bottom,#000000 23%,#810101 95%);
+}
+
+.wrapper{
+width:420px;
+position: relative;
+border:2px solid white;
+backdrop-filter:blur(9px);
+color:white;
+border-radius:12px;
+padding:30px 40px;
+}
+
+h1{
+font-size:58px;
+text-align:center;
+font-family:'Courier New',monospace;
+font-weight:200;
+}
+
+h2{
+text-align:center;
+font-family:'Courier New',monospace;
+color:#f02929;
+}
+
+.label{
+font-family:monospace;
+font-size:16px;
+}
+
+.copy-btn{
+width:25px;
+height:25px;
+margin-left:8px;
+border-radius:6px;
+border:1px solid white;
+background:transparent;
+cursor:pointer;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+transition:.25s;
+}
+
+.copy-btn svg{
+width:14px;
+height:14px;
+fill:white;
+}
+
+.copy-btn:hover{
+transform:scale(1.15);
+}
+
+.copied{
+border-color:#00ff88;
+animation:pop .3s;
+}
+
+.copied svg{
+fill:#00ff88;
+}
+
+@keyframes pop{
+50%{
+transform:scale(1.3);
+}
+}
+
+.back-btn{
+  width:100%;
+  height:45px;
+  margin-top:25px;
+  background:#ffffff;
+  border:none;
+  border-radius:40px;
+  cursor:pointer;
+  font-size:16px;
+  color:#333;
+  font-weight:600;
+  font-family:monospace;
+  transition:.3s ease;
+  box-shadow:
+    0 0 10px rgba(255,255,255,.5);
+}
+
+.back-btn:hover{
+  background:#ff1f1f;
+  color:white;
+  box-shadow:
+    0 0 10px #ff1f1f,
+    0 0 25px #ff1f1f,
+    0 0 50px #ff1f1f;
+  transform:translateY(-2px);
+}
+
+.back-btn:active{
+  transform:scale(.95);
+}
+
+.toast{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:max-content;
+    margin:0 auto;
+    background:rgba(0,255,136,0.12);
+    border:1px solid #00ff88;
+    color:#00ff88;
+    border-radius:25px;
+    padding:0 18px;
+    font-family:monospace;
+    font-size:14px;
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transform:scale(.95);
+    transition:
+      max-height .45s ease,
+      padding .45s ease,
+      margin .45s ease,
+      opacity .35s ease,
+      transform .35s ease;
+}
+
+.toast.show{
+    max-height:50px;
+    padding:8px 18px;
+    margin:15px auto;
+    opacity:1;
+    transform:scale(1);
+}
+
+.result-box{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    width:100%;
+
+    transition:.45s ease;
+}
+
+.url-text{
+    flex:1;
+
+    word-break:break-all;
+
+    transition:.45s ease;
+}
+
+
+
+
+@media (max-width:480px){
+  body{
+    padding:20px;
+  }
+
+  .wrapper{
+    width:100%;
+    max-width:420px;
+    padding:25px 20px;
+  }
+
+  .wrapper h1,
+  h1{
+    font-size:42px;
+  }
+
+  .wrapper h2,
+  h2{
+    font-size:16px;
+  }
+
+  .input-box{
+    height:45px;
+    margin:20px 0;
+  }
+
+  .input-box input{
+    font-size:12px;
+    padding:15px;
+  }
+
+  .btn{
+    height:42px;
+    font-size:15px;
+  }
+
+  .copy-btn{
+    width:23px;
+    height:23px;
+    flex-shrink:0;
+  }
+
+  .label{
+    font-size:14px;
+  }
+
+  #output{
+    word-break:break-word;
+    line-height:1.6;
+  }
+}
+
+
+/* Page entrance animation */
+
+.wrapper{
+  animation: fadeUp .7s ease forwards;
+}
+
+@keyframes fadeUp{
+
+  from{
+    opacity:0;
+    transform:translateY(30px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}
+
+/* Glass shine animation */
+
+.wrapper{
+  position:relative;
+  overflow:hidden;
+}
+
+.wrapper > *{
+  position:relative;
+  z-index:1;
+}
+
+.wrapper::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-150%;
+  width:80%;
+  height:100%;
+  background:linear-gradient(
+    120deg,
+    transparent,
+   rgba(255,255,255,0.08),
+    transparent
+  );
+  transform:skewX(-25deg);
+  animation:shine 4s infinite;
+}
+
+
+@keyframes shine{
+
+  0%{
+    left:-150%;
+  }
+
+  40%{
+    left:150%;
+  }
+
+  100%{
+    left:150%;
+  }
+
+}
+
+/* Animated background */
+
+body{
+  background:linear-gradient(
+    120deg,
+    #000000,
+    #810101,
+    #000000,
+    #4b0000
+  );
+  background-size:400% 400%;
+  animation:backgroundMove 12s ease infinite;
+}
+
+
+@keyframes backgroundMove{
+
+  0%{
+    background-position:0% 50%;
+  }
+
+  50%{
+    background-position:100% 50%;
+  }
+
+  100%{
+    background-position:0% 50%;
+  }
+
+}
+
+</style>
+</head>
+
+<div class="wrapper">
+
+<h1>MASKLINK</h1>
+<h2>by paaju</h2>
+
+<br>
+<br>
+
+<p id="output"></p>
+
+<button class="back-btn" onclick="window.location.href='/'">
+← Mask again
+</button>
+
+<div id="toast" class="toast">
+✓ URL Copied to clipboard!
+</div>
+
+</div>
+
+
+
+
+<script>
+  
+const params=new URLSearchParams(window.location.search);
+
+const url=params.get("url") || "";
+const maskingurl=params.get("maskingurl") || "";
+
+const cleanURL=url.replace(/^https?:\/\//,"");
+const finalText=`${maskingurl}@${cleanURL}`;
+
+document.getElementById("output").innerHTML =
+`<div class="result-box">
+  <span class="label">Masked URL :</span>
+  <span class="url-text">${finalText}</span>
+  <button class="copy-btn" onclick="copyText()">
+    <svg viewBox="0 0 24 24">
+      <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+    </svg>
+  </button>
+</div>
+`;
+
+
+function copyText() {
+    navigator.clipboard.writeText(finalText);
+
+    const toast = document.getElementById("toast");
+
+       toast.classList.add("show");
+
+      setTimeout(()=>{
+       toast.classList.remove("show");
+          },2000);
+
+    const btn = document.querySelector(".copy-btn");
+
+    btn.innerHTML = `
+    <svg viewBox="0 0 24 24">
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+    </svg>`;
+
+    btn.classList.add("copied");
+
+    setTimeout(() => {
+
+        btn.innerHTML = `
+        <svg viewBox="0 0 24 24">
+            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2z"/>
+        </svg>`;
+
+        btn.classList.remove("copied");
+
+    }, 1500);
+}
+
+</script>
+</body>
+</html>

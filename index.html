@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MaskLink</title>
+<link rel="icon" href="/masklink-logo.png?v=5">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Poppins",sans-serif;
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  background:linear-gradient(to bottom,#000000 23%,#810101 95%);
+}
+
+.wrapper{
+  width:420px;
+  background:transparent;
+  border:2px solid white;
+  backdrop-filter:blur(9px);
+  color:white;
+  border-radius:12px;
+  padding:30px 40px;
+}
+
+.wrapper h1{
+  font-size:58px;
+  text-align:center;
+  font-family:'Courier New',monospace;
+  font-weight:200;
+}
+
+.wrapper h2{
+  font-size:18px;
+  text-align:center;
+  font-family:'Courier New',monospace;
+  color:#f02929;
+}
+
+.input-box{
+  width:100%;
+  height:50px;
+  margin:30px 0;
+}
+
+.input-box input{
+  width:100%;
+  height:100%;
+  background:transparent;
+  border:2px solid #e6e6e6;
+  border-radius:40px;
+  color:white;
+  padding:20px;
+  outline:none;
+}
+
+.input-box input::placeholder{
+  color:#afafaf;
+}
+
+.btn{
+  width:100%;
+  height:45px;
+  background:#ffffff;
+  border:none;
+  border-radius:40px;
+  cursor:pointer;
+  font-size:16px;
+  color:#333;
+  font-weight:600;
+  transition:.3s ease;
+  box-shadow:
+    0 0 10px rgba(255,255,255,.5);
+}
+
+.btn:hover{
+  background:#ff1f1f;
+  color:white;
+  box-shadow:
+    0 0 10px #ff1f1f,
+    0 0 25px #ff1f1f,
+    0 0 50px #ff1f1f;
+  transform:translateY(-2px);
+}
+
+.btn:active{
+  transform:scale(.95);
+}
+
+.loading-container{
+  display:none;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  margin-top:18px;
+  opacity:0;
+  transition:.3s;
+}
+
+.loading-container.show{
+  display:flex;
+  opacity:1;
+}
+
+.loading-text{
+  color:#30f029;
+  font-family:monospace;
+  font-size:15px;
+}
+
+.dots{
+  display:flex;
+  gap:5px;
+}
+
+.dots span{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#30f029;
+  animation:bounce .8s infinite ease-in-out;
+}
+
+.dots span:nth-child(2){
+  animation-delay:.15s;
+}
+
+.dots span:nth-child(3){
+  animation-delay:.3s;
+}
+
+@keyframes bounce{
+0%,80%,100%{
+transform:translateY(0);
+opacity:.4;
+}
+40%{
+transform:translateY(-7px);
+opacity:1;
+}
+}
+
+
+
+@media (max-width:480px){
+  body{
+    padding:20px;
+  }
+
+  .wrapper{
+    width:100%;
+    max-width:420px;
+    padding:25px 20px;
+  }
+
+  .wrapper h1,
+  h1{
+    font-size:42px;
+  }
+
+  .wrapper h2,
+  h2{
+    font-size:16px;
+  }
+
+  .input-box{
+    height:45px;
+    margin:20px 0;
+  }
+
+  .input-box input{
+    font-size:12px;
+    padding:15px;
+  }
+
+  .btn{
+    height:42px;
+    font-size:15px;
+  }
+
+  .copy-btn{
+    width:23px;
+    height:23px;
+  }
+
+  .label{
+    font-size:14px;
+  }
+
+  #output{
+    word-break:break-word;
+    line-height:1.6;
+  }
+}
+
+
+/* Page entrance animation */
+
+.wrapper{
+  opacity:0;
+}
+
+.wrapper.show{
+  animation: fadeUp .7s ease forwards;
+}
+
+@keyframes fadeUp{
+
+  from{
+    opacity:0;
+    transform:translateY(30px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}
+
+/* Glass shine animation */
+
+.wrapper{
+  position:relative;
+  overflow:hidden;
+  z-index:0;
+}
+
+.wrapper form{
+  position:relative;
+  z-index:1;
+}
+
+.wrapper.show::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-150%;
+  width:80%;
+  height:100%;
+  background:linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.08),
+    transparent
+  );
+  transform:skewX(-25deg);
+  animation:shine 4s infinite;
+}
+
+
+@keyframes shine{
+
+  0%{
+    left:-150%;
+  }
+
+  40%{
+    left:150%;
+  }
+
+  100%{
+    left:150%;
+  }
+
+}
+
+/* Animated background */
+
+body{
+  background:linear-gradient(
+    120deg,
+    #000000,
+    #810101,
+    #000000,
+    #4b0000
+  );
+  background-size:400% 400%;
+  animation:backgroundMove 12s ease infinite;
+}
+
+
+@keyframes backgroundMove{
+
+  0%{
+    background-position:0% 50%;
+  }
+
+  50%{
+    background-position:100% 50%;
+  }
+
+  100%{
+    background-position:0% 50%;
+  }
+
+}
+
+/* Error animation */
+
+.error-box{
+  display:none;
+  justify-content:center;
+  align-items:center;
+  width:max-content;
+  margin:15px auto 0;
+  background:rgba(255,0,0,0.12);
+  border:1px solid #ff3030;
+  color:#ff3030;
+  border-radius:25px;
+  padding:8px 18px;
+  font-family:monospace;
+  font-size:14px;
+  opacity:0;
+  transform:scale(.8);
+  transition:.35s ease;
+}
+
+.error-box.show{
+  display:flex;
+  opacity:1;
+  transform:scale(1);
+  animation:errorShake .4s ease;
+}
+
+@keyframes errorShake{
+
+  0%,100%{
+    transform:translateX(0);
+  }
+
+  25%{
+    transform:translateX(-6px);
+  }
+
+  50%{
+    transform:translateX(6px);
+  }
+
+  75%{
+    transform:translateX(-3px);
+  }
+}
+
+.masklink-alert{
+    border:2px solid white !important;
+    border-radius:12px !important;
+    backdrop-filter:blur(10px);
+    box-shadow:
+    0 0 20px rgba(255,0,0,.4);
+}
+
+.masklink-button{
+    border-radius:40px !important;
+    font-family:monospace !important;
+    transition:.3s ease !important;
+}
+
+.masklink-button:hover{
+    background:#ff1f1f !important;
+    box-shadow:
+    0 0 10px #ff1f1f,
+    0 0 25px #ff1f1f !important;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+<form id="maskForm">
+
+<h1>MASKLINK</h1>
+<h2>by paaju</h2>
+
+<div class="input-box">
+<input 
+autocomplete="off" id="url" type="text" placeholder="Enter your URL to mask" required>
+</div>
+
+<div class="input-box">
+<input autocomplete="off" id="maskingurl" type="text" placeholder="Enter URL to mask with" required>
+</div>
+
+<button class="btn" type="submit"> Mask → </button>
+
+<div id="errorBox" class="error-box">
+    ⚠ Invalid URL
+</div>
+
+<div id="loading" class="loading-container">
+    <div class="dots">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+   <span id="loadingText" class="loading-text">
+          Preparing URL...
+  </span>
+</div>
+
+</form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+Swal.fire({
+    title: "⚠️ Notice",
+    html: `
+    <div style="font-family:monospace; color:white;">
+    This tool is designed for educational and legitimate purposes only.<br><br>
+    <span style="color:#ff3030; font-weight:bold;">
+    DO NOT USE FOR HARMFUL ACTIVITIES.
+    </span><br><br>
+    I am not responsible for any misuse, damage, or harm caused by improper use of this tool.
+    </div>
+    `,
+    icon: "warning",
+    confirmButtonText: "I Understand",
+    confirmButtonColor: "#810101",
+    background: "rgba(0,0,0,0.85)",
+    color: "#fff",
+    allowOutsideClick: false,
+    customClass: {
+        popup: "masklink-alert",
+        confirmButton: "masklink-button"
+    }
+}).then(() => {
+
+    document.querySelector(".wrapper").classList.add("show");
+
+});
+
+
+
+
+document.getElementById("maskForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    let url = document.getElementById("url").value.trim();
+
+if (!/^https?:\/\//i.test(url)) {
+    url = "https://" + url;
+}
+    const maskingurl = document.getElementById("maskingurl").value;
+
+    const loading = document.getElementById("loading");
+
+const loadingText = document.getElementById("loadingText");
+
+loading.style.display = "flex";
+
+setTimeout(()=>{
+  loading.classList.add("show");
+},10);
+
+
+const messages = [
+ "🔗 Preparing URL...",
+ "✂️ Shortening URL...",
+ "✨ Creating Mask..."
+];
+
+let messageIndex = 0;
+
+const animation = setInterval(()=>{
+
+  loadingText.textContent = messages[messageIndex];
+
+  messageIndex++;
+
+  if(messageIndex >= messages.length){
+    messageIndex = 0;
+  }
+
+},900);
+
+    try {
+
+        const response = await fetch("/shorten", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                url: url
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Bitly shortening failed");
+        }
+
+        let shortURL = data.shortUrl.replace(/^https?:\/\//, "");
+
+        clearInterval(animation);
+           loadingText.textContent="✓ Done!";
+
+                 window.location.href =
+            `mask.html?url=${encodeURIComponent(shortURL)}&maskingurl=${encodeURIComponent(maskingurl)}`;
+
+    }
+    catch (error) {
+
+       clearInterval(animation);
+
+      document.getElementById("loading").style.display = "none";
+
+        const errorBox = document.getElementById("errorBox");
+
+      errorBox.classList.add("show");
+
+      setTimeout(()=>{
+          errorBox.classList.remove("show");
+               },3000);
+    }
+
+});
+
+</script>
+
+</body>
+</html>
