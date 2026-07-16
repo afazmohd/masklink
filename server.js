@@ -22,21 +22,21 @@ app.post("/shorten", async (req, res) => {
         }
 
         const response = await fetch(
-            `https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`
+            `https://goo.su/api/links/create?url=${encodeURIComponent(longUrl)}`
         );
 
-        const shortUrl = await response.text();
+        const data = await response.json();
 
-        console.log("TinyURL response:", shortUrl);
+        console.log("Goo.su response:", data);
 
-        if (shortUrl.startsWith("Error")) {
+        if (!response.ok || data.error) {
             return res.status(400).json({
-                error: shortUrl
+                error: data.error || "Goo.su error"
             });
         }
 
         res.json({
-            shortUrl: shortUrl
+            shortUrl: data.short
         });
 
 
@@ -45,7 +45,7 @@ app.post("/shorten", async (req, res) => {
         console.error(error);
 
         res.status(500).json({
-            error: "TinyURL error"
+            error: "Goo.su error"
         });
 
     }
