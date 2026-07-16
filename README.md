@@ -4,7 +4,7 @@
 MaskLink is completeley designed for edecational and legitimate purposes only.
 *DO NOT USE FOR HARMFUL ACTIVITIES*
 
-MaskLink is live at https://masklink.onrender.com/ sometimes it takes 30 to 50s to load because the server will be sleep it needs to wake up
+MaskLink is live at https://masklink.onrender.com/ sometimes it takes 30 to 50s to load because the server will be in sleep, it needs to wake.
 
 With *masklink* you mask any URL and it has a **shortening** feature which shortens your URL.
 
