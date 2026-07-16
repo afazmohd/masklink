@@ -15,13 +15,29 @@ app.post("/shorten", async (req, res) => {
 
         const longUrl = req.body.url;
 
+        if (!longUrl) {
+            return res.status(400).json({
+                error: "URL is required"
+            });
+        }
+
         const response = await fetch(
             `https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`
         );
 
-        const data = await response.json();
+        const text = await response.text();
 
-        console.log("is.gd response:", data);
+        console.log("is.gd response:", text);
+
+        let data;
+
+        try {
+            data = JSON.parse(text);
+        } catch {
+            return res.status(400).json({
+                error: text
+            });
+        }
 
         if (data.errorcode) {
             return res.status(400).json({
@@ -32,6 +48,7 @@ app.post("/shorten", async (req, res) => {
         res.json({
             shortUrl: data.shorturl
         });
+
 
     } catch (error) {
 
@@ -45,10 +62,13 @@ app.post("/shorten", async (req, res) => {
 
 });
 
-app.listen(3000, () => {
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
 
     console.log(
-        "MaskPhish running at http://localhost:3000"
+        `MaskPhish running on port ${PORT}`
     );
 
 });
