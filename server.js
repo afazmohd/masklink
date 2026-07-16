@@ -22,31 +22,21 @@ app.post("/shorten", async (req, res) => {
         }
 
         const response = await fetch(
-            `https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`
+            `https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`
         );
 
-        const text = await response.text();
+        const shortUrl = await response.text();
 
-        console.log("is.gd response:", text);
+        console.log("TinyURL response:", shortUrl);
 
-        let data;
-
-        try {
-            data = JSON.parse(text);
-        } catch {
+        if (shortUrl.startsWith("Error")) {
             return res.status(400).json({
-                error: text
-            });
-        }
-
-        if (data.errorcode) {
-            return res.status(400).json({
-                error: data.errormessage
+                error: shortUrl
             });
         }
 
         res.json({
-            shortUrl: data.shorturl
+            shortUrl: shortUrl
         });
 
 
@@ -55,7 +45,7 @@ app.post("/shorten", async (req, res) => {
         console.error(error);
 
         res.status(500).json({
-            error: "is.gd error"
+            error: "TinyURL error"
         });
 
     }
