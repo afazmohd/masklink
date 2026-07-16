@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 
@@ -22,37 +23,34 @@ app.post("/shorten", async (req, res) => {
         }
 
         const response = await fetch(
-            `https://goo.su/api/links/create?url=${encodeURIComponent(longUrl)}`
+            "https://goo.su/api/links/create",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Goo-Api-Token": process.env.GOO_TOKEN
+                },
+
+                body: JSON.stringify({
+                    url: longUrl
+                })
+            }
         );
 
-        const text = await response.text();
 
-        console.log("Goo.su response:", text);
+        const data = await response.json();
 
-        let data;
-
-        try {
-            data = JSON.parse(text);
-        } catch {
-
-            return res.status(400).json({
-                error: "Goo.su returned invalid response"
-            });
-
-        }
+        console.log("Goo.su response:", data);
 
 
         if (!response.ok) {
-
-            return res.status(response.status).json({
-                error: data.error || "Goo.su error"
-            });
-
+            return res.status(response.status).json(data);
         }
 
 
         res.json({
-            shortUrl: data.short || data.short_url || data.url
+            shortUrl: data.short_url || data.short
         });
 
 
